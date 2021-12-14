@@ -135,13 +135,15 @@ BDD100K는 이와 같은 정보를 통해 물체 검출, 세그먼테이션, 운
 
 ### 3.1. YOLOv5(You Only Look Once)
 
-* **YOLO**
 
-  ```python
-  def  
-  ```
 
-  
+YOLO는 
+
+
+
+https://github.com/ultralytics/yolov5
+
+
 
 ####  3.2. Dataset Pre-Processing
 
