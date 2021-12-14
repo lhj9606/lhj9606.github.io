@@ -10,7 +10,7 @@ baseurl: ''
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
-lang: en
+lang: ko-kr
 
 # Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
 timezone: Asia/Seoul
@@ -23,9 +23,7 @@ title: Hong Jun Lee                          # the main title
 tagline: Mechanical Engineering / ML   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, portfolio, sidebar,
-  bootstrap Jekyll theme with responsive web design
-  and focuses on text presentation.
+  Hong Jun's blog
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://lhj9606.github.io'
@@ -33,8 +31,8 @@ url: 'https://lhj9606.github.io'
 github:
   username: lhj9606             # change to your github username
 
-twitter:
-  username: twitter_username            # change to your twitter username
+# twitter:
+#  username: twitter_username            # change to your twitter username
 
 social:
   # Change to your full name.
