@@ -23,11 +23,11 @@ pin: true
 
 ------
 
-## ■ Video Summary
+## Video Summary
 
 
 
-
+YOUTUBE EMBEDDED / LINK INSERT
 
 
 
@@ -63,22 +63,33 @@ pin: true
 
 ### 1.2. Objective
 
-본 프로젝트는 YOLOv5를 기반으로 하여, 자율주행 환경에 필요한 이미지들을 모델에 학습하고, 자율주행 환경에 필요한 이미지 검출 속도에 맞게 모델을 튜닝할 예정이다. 
+ 본 프로젝트는 YOLOv5를 기반으로 하여, 자율주행 환경에 필요한 이미지들을 모델에 학습하고, 자율주행 환경에 필요한 이미지 검출 속도에 맞게 모델을 튜닝할 예정이다. 
 
-학습된 모델을 토대로 실제 차량에 탑재하여, 실제 차량과 그 이외의 주행 상황에 등장 가능한 물체에 대한 인식을 검출하는 시도를 하면 좋겠지만, 실제 차량에 컴퓨터와 카메라를 탑재하여 이를 검증해보는 것이 어렵다. 따라서, 본 프로젝트에서는 자율주행 환경을 모사 가능한 일부 게임 (ex. *GTA5, Euro Truck Simulator, Forza Horizon* 등)의 화면 데이터를 카메라 데이터로 대응시켜 모델의 객체 검출이 잘 이뤄지는지 확인해볼 예정이다.
+ 학습된 모델을 토대로 실제 차량에 탑재하여, 실제 차량과 그 이외의 주행 상황에 등장 가능한 물체에 대한 인식을 검출하는 시도를 하면 좋겠지만, 실제 차량에 컴퓨터와 카메라를 탑재하여 이를 검증해보는 것이 어렵다. 따라서, 본 프로젝트에서는 자율주행 환경을 모사 가능한 일부 게임 (ex. *GTA5, Euro Truck Simulator, Forza Horizon* 등)의 화면 데이터를 카메라 데이터로 대응시켜 모델의 객체 검출이 잘 이뤄지는지 확인해볼 예정이다.
 
 
 
 ## 2. Datasets
 
-자율주행을 위한 딥러닝 학습용 Open Dataset은 다양하게 공개가 되어있습니다. 
+자율주행을 위한 딥러닝 학습용 Open Dataset은 다양하게 공개가 되어있다. 
+
+
+
+* **KITTI Dataset**
+
+
+ KITTI Dataset은 현존하는 자율주행 Dataset 중에서 가장 많이 사용되는 Dataset으로 자율주행의 다양한 인지 Task를 위한 라벨링(Annotation)을 제공한다. 2D/3D 물체 검출(Object Detection)은 물론 물체 추적(Tracking), 거리 추정, Odometry, 스테레오 비전, 영역 분할 등의 Task에 활용될 수 있다. 또한 알고리즘 벤치마크를 위한 리더보드도 제공한다.
+
+다만 신호등에 대한 라벨링 정보가 없어 신호등에 대한 학습이 제한된다는 단점이 있다.
+
+
 
 * **COCO Dataset**
 
 
-COCO Dataset은 객체 검출(Object Detection), 세그먼테이션(Segmentation), 키포인트 탐지(Keypoint Detection) 등과 같은 컴퓨터 비전(CV, Computer Vision) 분야의 Task를 목적으로 만들어진 Dataset이다. 
+ COCO Dataset은 객체 검출(Object Detection), 세그먼테이션(Segmentation), 키포인트 탐지(Keypoint Detection) 등과 같은 컴퓨터 비전(CV, Computer Vision) 분야의 Task를 목적으로 만들어진 Dataset이다. 
 
-COCO Dataset의 구성은 다음과 같다. (COCO 2017 Dataset 기준)
+ COCO Dataset의 구성은 다음과 같다. (COCO 2017 Dataset 기준)
 
 - 학습(Training) : 118,000 images
 
@@ -91,27 +102,18 @@ COCO Dataset의 구성은 다음과 같다. (COCO 2017 Dataset 기준)
 * **Waymo Dataset**
 
 
-Waymo Dataset은 CVPR 2019에서 공개된 연구 목적 비상업용 Dataset으로 Motion Dataset과 Perception Dataset으로 나누어 제공되며, 자율주행 자동차의 인지분야와 관련된 데이터는 Perception Dataset이다. 
+ Waymo Dataset은 CVPR 2019에서 공개된 연구 목적 비상업용 Dataset으로 Motion Dataset과 Perception Dataset으로 나누어 제공되며, 자율주행 자동차의 인지분야와 관련된 데이터는 Perception Dataset이다. 
 
-이 Dataset은 Waymo의 자율주행 차량이 1950개 주행 구간에서 수집한 지역별, 시간별, 날씨별 데이터를 포함하고 있으며 각 구간은 10Hz, 20초의 연속주행 데이터를 포함하고 있다. 또한 전방 카메라 데이터 외에도 5개의 라이다(LiDAR) 데이터 등도 포함하고 있으며 4개의 Class 정보(Vehicles, Pedestrians, Cyclists, Signs)와 1000개의 카메라 Segments 데이터를 포함하고 있다.
-
-
-
-* **KITTI Dataset**
-
-
-KITTI Dataset은 현존하는 자율주행 Dataset 중에서 가장 많이 사용되는 Dataset으로 자율주행의 다양한 인지 Task를 위한 라벨링(Annotation)을 제공한다. 2D/3D 물체 검출(Object Detection)은 물론 물체 추적(Tracking), 거리 추정, Odometry, 스테레오 비전, 영역 분할 등의 Task에 활용될 수 있다. 또한 알고리즘 벤치마크를 위한 리더보드도 제공한다.
-
-다만 신호등에 대한 라벨링 정보가 없어 신호등에 대한 학습이 제한된다는 단점이 있다.
+ 이 Dataset은 Waymo의 자율주행 차량이 1950개 주행 구간에서 수집한 지역별, 시간별, 날씨별 데이터를 포함하고 있으며 각 구간은 10Hz, 20초의 연속주행 데이터를 포함하고 있다. 또한 전방 카메라 데이터 외에도 5개의 라이다(LiDAR) 데이터 등도 포함하고 있으며 4개의 Class 정보(Vehicles, Pedestrians, Cyclists, Signs)와 1000개의 카메라 Segments 데이터를 포함하고 있다.
 
 
 
 * **BDD100K**
 
 
-UC 버클리 인공지능 연구실(BAIR)에서 공개한 Dataset으로 40초의 비디오 시퀀스, 720px 해상도, 30 fps의 동영상으로 취득된 100,000개의 비디오 시퀀스로 구성된다. 해당 Dataset에는 다양한 날씨 조건은 물론, GPS 정보, IMU 정보, 시간 정보도 포함되어 있다. 또한 차선 및 주행 가능 영역에 대한 라벨링이 되어있다. 그리고 버스, 신호등, 교통 표지판, 사람, 자전거, 트럭, 자동차 등의 정보가 담긴 100,000개의 이미지에 라벨링이 완료된 2D Bounding Box가 포함되어 있다.
+ UC 버클리 인공지능 연구실(BAIR)에서 공개한 Dataset으로 40초의 비디오 시퀀스, 720px 해상도, 30 fps의 동영상으로 취득된 100,000개의 비디오 시퀀스로 구성된다. 해당 Dataset에는 다양한 날씨 조건은 물론, GPS 정보, IMU 정보, 시간 정보도 포함되어 있다. 또한 차선 및 주행 가능 영역에 대한 라벨링이 되어있다. 그리고 버스, 신호등, 교통 표지판, 사람, 자전거, 트럭, 자동차 등의 정보가 담긴 100,000개의 이미지에 라벨링이 완료된 2D Bounding Box가 포함되어 있다.
 
-BDD100K는 이와 같은 정보를 통해 물체 검출, 세그먼테이션, 운전 가능 지역, 차선 검출 등의 Task 수행이 가능하다.
+ BDD100K는 이와 같은 정보를 통해 물체 검출, 세그먼테이션, 운전 가능 지역, 차선 검출 등의 Task 수행이 가능하다.
 
 
 
@@ -133,6 +135,15 @@ BDD100K는 이와 같은 정보를 통해 물체 검출, 세그먼테이션, 운
 
 ## 3. Methodology
 
+### [Computing Environment]
+
+* *OS : Windows 10 Pro 21H2 / WSL2 Ubuntu*
+* *CPU : Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz*
+* *RAM : 32GB*
+* *GPU : NVIDIA GeForce GTX970 4GB (Driver version - 497.09, CUDA version - 11.5)* 
+
+
+
 ### 3.1. YOLOv5(You Only Look Once)
 
 
@@ -145,14 +156,14 @@ https://github.com/ultralytics/yolov5
 
 
 
-####  3.2. Dataset Pre-Processing
+###  3.2. Dataset Pre-Processing
 
-  ```bash
-  $ git clone https://github.com/ultralytics/yolov5
-  $ cd yolov5
-  $ pip install -r requirements.txt
-  ```
+```
+$ git clone https://github.com/ultralytics/yolov5
+$ cd yolov5
 
+$ pip install -r requirements.txt
+```
 ​	
 
 ####  3.2. Dataset Training
