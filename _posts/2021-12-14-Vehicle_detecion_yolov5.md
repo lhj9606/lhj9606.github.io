@@ -15,6 +15,8 @@ pin: true
 <center><b> Hanyang University 2021 Fall / AI+X:Deep Learning / Final Project </b></center>
 
 ---
+<br>
+
 ## Member
 
 |  이름  |    학과    |    학번    |        E-mail         | 역할 |
@@ -23,6 +25,8 @@ pin: true
 
 
 ---
+<br>
+
 ## 0. Video Summary
 
 
@@ -31,7 +35,7 @@ YOUTUBE EMBEDDED / LINK INSERT
 
 
 
-
+<br>
 
 
 ---
@@ -69,6 +73,8 @@ YOUTUBE EMBEDDED / LINK INSERT
  본 프로젝트는 YOLOv5를 기반으로 하여, 자율주행 환경에 필요한 이미지들을 모델에 학습하고, 자율주행 환경에 필요한 이미지 검출 속도에 맞게 모델을 튜닝할 예정이다. 
 
  학습된 모델을 토대로 실제 차량에 탑재하여, 실제 차량과 그 이외의 주행 상황에 등장 가능한 물체에 대한 인식을 검출하는 시도를 하면 좋겠지만, 실제 차량에 컴퓨터와 카메라를 탑재하여 이를 검증해보는 것이 어렵다. 따라서, 본 프로젝트에서는 자율주행 환경을 모사 가능한 일부 게임 (ex. *GTA5, Forza Horizon* 등)의 화면 데이터를 카메라 데이터로 대응시켜 모델의 객체 검출이 잘 이뤄지는지 확인해볼 예정이다.
+
+<br>
 
 
 ---
@@ -116,7 +122,7 @@ KITTI Dataset은 개조된 Volkswagen Passat B6을 이용하여 데이터를 수
 
 <center><u><span style="color:blue">본 프로젝트에서는 프로젝트 진행 환경(HW, SW)을 고려하여 자율주행 인지에 가장 자주 쓰이는 KITTI Dataset을 이용하여 학습을 진행한다.</span></u></center>
 
-<center><img src="F:\Github\lhj9606.github.io\images\KITTI_instruction.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\KITTI_instruction.PNG" style="zoom:80%;" /></center>
 
 <br>
 
@@ -128,20 +134,18 @@ KITTI 홈페이지에 간단한 가입을 마친 후에서 'Object' 탭 내의 '
 * **Testing image** : 7,518 images -> label이 없으므로 사용하지 않을 예정
 * **Classification** : ['Cyclist', 'DontCare', 'Misc', 'Person_sitting', 'Tram', 'Truck', 'Van', 'car', 'person'] - 9개 분류
 
----
-
-
-
 <br>
+
+---
 
 ### 2.2. nuScenes Dataset
 https://www.nuscenes.org/
 
  현대자동차그룹과 앱티브(Aptiv)의 합작사인 '모셔널(Motional)'이 구축한 자율주행 개발을 위한 Dataset으로 360도 감지를 위한 6대의 카메라와 5대의 레이더, 1대의 LiDAR, IMU, GPS를 통해 수집된 데이터이다. 즉 자율주행 차량에 필요한 모든 센서를 부착 후 수집하여, 완전한 자율주행 차량 개발에 응용이 가능하며, 1,400,000의 카메라 이미지와 390,000 라이다 포인트를 갖고 있으며, 데이터 수집을 위한 운행은 보스턴과 싱가포르에서 수행되었다. 23개의 객체 분류를 갖고있다.
 
----
 <br>
 
+---
 
 ### 2.3. Waymo Dataset
 (https://waymo.com/open)
@@ -151,9 +155,9 @@ https://www.nuscenes.org/
 
  이 Dataset은 Waymo의 자율주행 차량이 1950개 주행 구간에서 수집한 지역별, 시간별, 날씨별 데이터를 포함하고 있으며 각 구간은 10Hz, 20초의 연속주행 데이터를 포함하고 있다. 즉 20,000,000개 이상의 프레임 데이터와 시간 환산 시 500시간이 넘는 데이터이다. 또한 전방 카메라 데이터 외에도 5개의 라이다(LiDAR, 중거리 LiDAR 1개, 단거리 LiDAR 4개) 데이터 등도 포함하고 있으며 4개의 Class 정보(Vehicles, Pedestrians, Cyclists, Signs)와 1000개의 카메라 Segments 데이터를 포함하고 있다.
 
----
 <br>
 
+---
 ### 2.4. BDD100K
 (https://www.bdd100k.com/)
 
@@ -162,7 +166,6 @@ https://www.nuscenes.org/
 
  BDD100K는 이와 같은 정보를 통해 물체 검출, 세그먼테이션, 운전 가능 지역, 차선 검출 등의 Task 수행이 가능하다.
 
----
 <br>
 
 
