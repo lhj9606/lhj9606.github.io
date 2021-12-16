@@ -24,7 +24,7 @@ pin: true
 
 ------
 
-## Video Summary
+## 0. Video Summary
 
 
 
@@ -213,13 +213,13 @@ $ cd yolov5
 
 $ pip install -r requirements.txt
 ```
-​	
 
-####  3.2. Dataset Training
 
-#### 3.3. YOLOv5 (You Only Look Once)
+### 3.3. Dataset Training
 
-#### 3.4. OpenCV
+### 3.4. YOLOv5 (You Only Look Once)
+
+### 3.5. OpenCV
 
 
 
