@@ -3,7 +3,7 @@
 title: YOLOv5를 이용한 Vehicle Detection & Validation with Video Game Graphics (AI-X:Deep-Learning)
 author: 
   name: Hong Jun Lee
-  link: https://github.com/cotes2020
+  link: https://github.com/lhj9606
 date: 2021-12-03 20:55:00 +0900
 categories: [Blogging, AI+X]
 tags: [AI, Deep Learning, Yolov5, Vehicle Detection]
@@ -16,7 +16,6 @@ pin: true
 
 ---
 <br>
-
 ## Member
 
 |  이름  |    학과    |    학번    |        E-mail         | 역할 |
@@ -86,7 +85,7 @@ YOUTUBE EMBEDDED / LINK INSERT
 
 ### 2.1. KITTI Dataset
 
- (http://www.cvlibs.net/datasets/kitti/)
+ [http://www.cvlibs.net/datasets/kitti/](http://www.cvlibs.net/datasets/kitti/)
 
 <center><iframe width="644" height="364" src="https://www.youtube.com/embed/KXpZ6B1YB_k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
 
@@ -139,7 +138,7 @@ KITTI 홈페이지에 간단한 가입을 마친 후에서 'Object' 탭 내의 '
 ---
 
 ### 2.2. nuScenes Dataset
-https://www.nuscenes.org/
+[https://www.nuscenes.org/](https://www.nuscenes.org/)
 
  현대자동차그룹과 앱티브(Aptiv)의 합작사인 '모셔널(Motional)'이 구축한 자율주행 개발을 위한 Dataset으로 360도 감지를 위한 6대의 카메라와 5대의 레이더, 1대의 LiDAR, IMU, GPS를 통해 수집된 데이터이다. 즉 자율주행 차량에 필요한 모든 센서를 부착 후 수집하여, 완전한 자율주행 차량 개발에 응용이 가능하며, 1,400,000의 카메라 이미지와 390,000 라이다 포인트를 갖고 있으며, 데이터 수집을 위한 운행은 보스턴과 싱가포르에서 수행되었다. 23개의 객체 분류를 갖고있다.
 
@@ -148,7 +147,7 @@ https://www.nuscenes.org/
 ---
 
 ### 2.3. Waymo Dataset
-(https://waymo.com/open)
+[https://waymo.com/open](https://waymo.com/open)
 
 
  Waymo Dataset은 CVPR 2019에서 공개된 연구 목적 비상업용 Dataset으로 Motion Dataset과 Perception Dataset으로 나누어 제공되며, 자율주행 자동차의 인지분야와 관련된 데이터는 Perception Dataset이다. 
@@ -159,7 +158,7 @@ https://www.nuscenes.org/
 
 ---
 ### 2.4. BDD100K
-(https://www.bdd100k.com/)
+[https://www.bdd100k.com/](https://www.bdd100k.com/)
 
 
  UC 버클리 인공지능 연구실(BAIR)에서 공개한 Dataset으로 40초의 비디오 시퀀스, 720px 해상도, 30 fps의 동영상으로 취득된 100,000개의 비디오 시퀀스로 구성된다. 해당 Dataset에는 다양한 날씨 조건은 물론, GPS 정보, IMU 정보, 시간 정보도 포함되어 있다. 또한 차선 및 주행 가능 영역에 대한 라벨링이 되어있다. 그리고 버스, 신호등, 교통 표지판, 사람, 자전거, 트럭, 자동차 등의 정보가 담긴 100,000개의 이미지에 라벨링이 완료된 2D Bounding Box가 포함되어 있다.
@@ -200,17 +199,60 @@ conda create -n 'env_name' python=3.8
 ---
 ### 3.1. YOLOv5(You Only Look Once)
 
+[https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5)
+
+<br>
+
+<center><iframe width="717" height="269" src="https://www.youtube.com/embed/NM6lrxy0bxs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+
+<br>
+
+YOLO는 'You Only Look Once'의 약자로 2016년 Joseph Redmon이 CVPR에서 발표한 'You Only Look Once: Unified, Real-Time Object Detection' 객체 탐지(Object Detection) 딥러닝 모델이다. 
+
+해당 논문 발표 당시에는 대표적인 객체 탐지 기법으로 R-CNN(Region with Convolutional Neural Network) 계열(R-CNN, Fast R-CNN, Faster R-CNN 등)과 DPM(Deoformable Part Models) 등이 존재하고 있었다. 그러나 해당 기법들의 정확도는 좋았으나, 객체 탐지를 실시간으로 하기에는 너무 느렸다. Faster R-CNN의 경우에도 7fps가 최대 속도였다. 
 
 
 
-
-YOLO는 
-
+<center><img src="\images\RCNN.png" style="zoom: 67%;" /></center>
 
 
-https://github.com/ultralytics/yolov5
+
+이러한 기법들은 2단계로 이미지를 처리하기 때문이었다. 즉 이미지 입력이 들어오면 객체가 있을 것으로 추정되는 영역 ROI(Region Of Interest)를 추출한 이후, 다음 단계에서 ROI들은 분류기(Classifier)에 의해 객체별로 분류가 이루어지는 구조였다.
 
 
+
+<center><img src="\images\yolo_model.png" style="zoom: 67%;" /></center>
+
+
+
+그러나 YOLO는 다르다. YOLO는 단 한 단계의 구조로 네트워크가 작동하는데, 즉 이미지의 특징(Feature) 추출, 객체(Object)의 위치 파악, 객체 분류(Classification)이 한 번에 수행되므로 앞서 언급된 구조들에 비해서 정확도는 조금 떨어지지만 처리 속도가 매우 빠르고 간단하다.
+
+
+
+즉, YOLO의 주요한 특징은 크게 다음과 같이 3가지로 설명될 수 있다.
+
+
+
+* **You Only Look Once**
+  YOLO는 ROI등의 기법 사용 없이 이미지 전체를 단 한번만 본다.
+* **Unified Detection**
+  다른 객체 탐지 모델 들은 다양한 전처리 모델과 인공 신경망을 결합해서 사용하지만, YOLO는 단 하나의 인공신경망에서 이를 전부 처리한다. 이런 특징 때문에 YOLO가 다른 모델보다 간단해 보인다.
+* **Real-Time Object Detection**
+  2단계의 객체 탐지 모델들에 비해서 매우 빠르게 객체 탐지가 가능하기 때문에 실시간으로 사용이 가능하다.
+
+
+
+가장 초창기 YOLOv1의 구조는 다음과 같다.
+
+<center><img src="\images\yolo_arch.png" style="zoom: 67%;" /></center>
+
+전체적인 네트워크 신경만 구조는 총 24개의 합성곱 레이어(Convolutional Layer)와 2개의 Fully-Connected Layer를 사용하고 있다. 
+
+* **Pre-trained Network**
+
+ 
+
+<br>
 
  1 . 우선 F 드라이브 내에 본 프로젝트 파일을 정리하고 저장할 폴더 'project'를 생성한 후, Windows PowerShell을 이용하여 해당 폴더로 이동한다.
 
@@ -377,7 +419,7 @@ pip3 install torch==1.10.0+cu102 torchvision==0.11.1+cu102 torchaudio===0.10.0+c
 
 
 
-CUDA 10.2
+
 
 ```powershell
 python train.py --img 416 --batch 16 --epochs 100 --data 'Dataset/KITTI_YOLOv5/data.yaml' --weights yolov5s.pt --cache
@@ -996,7 +1038,10 @@ Results saved to runs\train\exp
 
 ## Reference
 
-* Vehicle Detection in Urban Traffic Surveillance Images Based on Convolutional Neural Networks with Feature Concatenation / https://doi.org/10.3390/s19030594
-* Are we ready for autonomous driving? The KITTI vision benchmark suite / https://ieeexplore.ieee.org/document/6248074
-* Top 5 Autonomous Driving Dataset Open-Sourced At CVPR 2020 / https://analyticsindiamag.com/top-5-autonomous-driving-dataset-open-sourced-at-cvpr-2020/
-* You Only Look Once: Unified, Real-Time Object Detection / https://arxiv.org/abs/1506.02640
+* Vehicle Detection in Urban Traffic Surveillance Images Based on Convolutional Neural Networks with Feature Concatenation / [https://doi.org/10.3390/s19030594](https://doi.org/10.3390/s19030594)
+* Are we ready for autonomous driving? The KITTI vision benchmark suite / [https://ieeexplore.ieee.org/document/6248074](https://ieeexplore.ieee.org/document/6248074)
+* Top 5 Autonomous Driving Dataset Open-Sourced At CVPR 2020 / [https://analyticsindiamag.com/top-5-autonomous-driving-dataset-open-sourced-at-cvpr-2020/](https://analyticsindiamag.com/top-5-autonomous-driving-dataset-open-sourced-at-cvpr-2020/)
+* You Only Look Once: Unified, Real-Time Object Detection / [https://arxiv.org/abs/1506.02640](https://arxiv.org/abs/1506.02640)
+* Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks / [https://arxiv.org/abs/1506.01497](https://arxiv.org/abs/1506.01497)
+* You Only Look Once — 다.. 단지 한 번만 보았을 뿐이라구! / [https://medium.com/curg/you-only-look-once-%EB%8B%A4-%EB%8B%A8%EC%A7%80-%ED%95%9C-%EB%B2%88%EB%A7%8C-%EB%B3%B4%EC%95%98%EC%9D%84-%EB%BF%90%EC%9D%B4%EB%9D%BC%EA%B5%AC-bddc8e6238e2](https://medium.com/curg/you-only-look-once-%EB%8B%A4-%EB%8B%A8%EC%A7%80-%ED%95%9C-%EB%B2%88%EB%A7%8C-%EB%B3%B4%EC%95%98%EC%9D%84-%EB%BF%90%EC%9D%B4%EB%9D%BC%EA%B5%AC-bddc8e6238e2)
+
