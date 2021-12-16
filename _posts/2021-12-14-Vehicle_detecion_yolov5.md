@@ -68,7 +68,7 @@ YOUTUBE EMBEDDED / LINK INSERT
 
  본 프로젝트는 YOLOv5를 기반으로 하여, 자율주행 환경에 필요한 이미지들을 모델에 학습하고, 자율주행 환경에 필요한 이미지 검출 속도에 맞게 모델을 튜닝할 예정이다. 
 
- 학습된 모델을 토대로 실제 차량에 탑재하여, 실제 차량과 그 이외의 주행 상황에 등장 가능한 물체에 대한 인식을 검출하는 시도를 하면 좋겠지만, 실제 차량에 컴퓨터와 카메라를 탑재하여 이를 검증해보는 것이 어렵다. 따라서, 본 프로젝트에서는 자율주행 환경을 모사 가능한 일부 게임 (ex. *GTA5, Euro Truck Simulator, Forza Horizon* 등)의 화면 데이터를 카메라 데이터로 대응시켜 모델의 객체 검출이 잘 이뤄지는지 확인해볼 예정이다.
+ 학습된 모델을 토대로 실제 차량에 탑재하여, 실제 차량과 그 이외의 주행 상황에 등장 가능한 물체에 대한 인식을 검출하는 시도를 하면 좋겠지만, 실제 차량에 컴퓨터와 카메라를 탑재하여 이를 검증해보는 것이 어렵다. 따라서, 본 프로젝트에서는 자율주행 환경을 모사 가능한 일부 게임 (ex. *GTA5, Forza Horizon* 등)의 화면 데이터를 카메라 데이터로 대응시켜 모델의 객체 검출이 잘 이뤄지는지 확인해볼 예정이다.
 
 
 ---
@@ -78,61 +78,92 @@ YOUTUBE EMBEDDED / LINK INSERT
 
 
 
-* **KITTI Dataset**
+### 2.1. KITTI Dataset
 
+ (http://www.cvlibs.net/datasets/kitti/)
+
+<center><iframe width="644" height="364" src="https://www.youtube.com/embed/KXpZ6B1YB_k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+
+<br>
 
  KITTI Dataset은 현존하는 자율주행 Dataset 중에서 가장 많이 사용되는 Dataset으로 자율주행의 다양한 인지 Task를 위한 라벨링(Annotation)을 제공한다. 2D/3D 물체 검출(Object Detection)은 물론 물체 추적(Tracking), 거리 추정, Odometry, 스테레오 비전, 영역 분할 등의 Task에 활용될 수 있다. 또한 알고리즘 벤치마크를 위한 리더보드도 제공한다.
 
+
+
+<img src="http://www.cvlibs.net/datasets/kitti/images/setup_top_view.png" style="zoom: 67%;" />
+
+<img src="http://www.cvlibs.net/datasets/kitti/images/passat_sensors_920.png" style="zoom:67%;" />
+
+<center><b>KITTI Dataset 구축을 위해 사용되었던 Vehicle과 Sensor Setup</b></center>
+
+ <br>
+
+KITTI Dataset은 개조된 Volkswagen Passat B6을 이용하여 데이터를 수집하였으며, 데이터의 처리 및 저장은 Intel i7 CPU와 Linux OS를 이용하였다.
+
+데이터 수집을 위해 개조된 차량의 센서 구성은 다음과 같다.
+
+- 1 Inertial Navigation System (GPS/IMU): [OXTS RT 3003](http://www.oxts.com/default.asp?pageRef=21)
+- 1 Laserscanner: [Velodyne HDL-64E](http://velodynelidar.com/lidar/hdlproducts/hdl64e.aspx)
+- 2 Grayscale cameras, 1.4 Megapixels: [Point Grey Flea 2 (FL2-14S3M-C)](http://www.ptgrey.com/products/flea2/flea2_firewire_camera.asp)
+- 2 Color cameras, 1.4 Megapixels: [Point Grey Flea 2 (FL2-14S3C-C)](http://www.ptgrey.com/products/flea2/flea2_firewire_camera.asp)
+- 4 Varifocal lenses, 4-8 mm: [Edmund Optics NT59-917](http://www.edmundoptics.com/imaging/imaging-lenses/zoom-lenses/varifocal-imaging-lenses/1620)
+
+
+
+센서 구성에서 알 수 있다시피, KITTI Dataset은 단순히 카메라 데이터만을 포함하고 있지는 않다. GPS, IMU 정보와 LiDAR Pointcloud 정보도 내장하고 있다. 그렇지만 본 프로젝트에서는 카메라 데이터만 이용할 예정이다.
+
 다만 신호등에 대한 라벨링 정보가 없어 신호등에 대한 학습이 제한된다는 단점이 있다.
 
+<center><u><span style="color:blue">본 프로젝트에서는 프로젝트 진행 환경(HW, SW)을 고려하여 자율주행 인지에 가장 자주 쓰이는 KITTI Dataset을 이용하여 학습을 진행한다.</span></u></center>
+
+<center><img src="F:\Github\lhj9606.github.io\images\KITTI_instruction.PNG" style="zoom:80%;" /></center>
+
+<br>
+
+KITTI 홈페이지에 간단한 가입을 마친 후에서 'Object' 탭 내의 '*left color images of object data set*'과 '*training labels of object data set*' 을 다운로드 받는다.
+
+기본적인 Dataset 구성은 다음과 같다.
+
+* **Training Image** : 7,481 images (Resolution : 1242 * 375) / 7,481 labels
+* **Testing image** : 7,518 images -> label이 없으므로 사용하지 않을 예정
+* **Classification** : ['Cyclist', 'DontCare', 'Misc', 'Person_sitting', 'Tram', 'Truck', 'Van', 'car', 'person'] - 9개 분류
+
+---
 
 
-* **COCO Dataset**
+
+<br>
+
+### 2.2. nuScenes Dataset
+https://www.nuscenes.org/
+
+ 현대자동차그룹과 앱티브(Aptiv)의 합작사인 '모셔널(Motional)'이 구축한 자율주행 개발을 위한 Dataset으로 360도 감지를 위한 6대의 카메라와 5대의 레이더, 1대의 LiDAR, IMU, GPS를 통해 수집된 데이터이다. 즉 자율주행 차량에 필요한 모든 센서를 부착 후 수집하여, 완전한 자율주행 차량 개발에 응용이 가능하며, 1,400,000의 카메라 이미지와 390,000 라이다 포인트를 갖고 있으며, 데이터 수집을 위한 운행은 보스턴과 싱가포르에서 수행되었다. 23개의 객체 분류를 갖고있다.
+
+---
+<br>
 
 
- COCO Dataset은 객체 검출(Object Detection), 세그먼테이션(Segmentation), 키포인트 탐지(Keypoint Detection) 등과 같은 컴퓨터 비전(CV, Computer Vision) 분야의 Task를 목적으로 만들어진 Dataset이다. 
-
- COCO Dataset의 구성은 다음과 같다. (COCO 2017 Dataset 기준)
-
-- 학습(Training) : 118,000 images
-
-- 검증(Validation) : 5,000 images
-
-- 시험(Test) : 41,000 images
-
-  
-
-* **Waymo Dataset**
+### 2.3. Waymo Dataset
+(https://waymo.com/open)
 
 
  Waymo Dataset은 CVPR 2019에서 공개된 연구 목적 비상업용 Dataset으로 Motion Dataset과 Perception Dataset으로 나누어 제공되며, 자율주행 자동차의 인지분야와 관련된 데이터는 Perception Dataset이다. 
 
- 이 Dataset은 Waymo의 자율주행 차량이 1950개 주행 구간에서 수집한 지역별, 시간별, 날씨별 데이터를 포함하고 있으며 각 구간은 10Hz, 20초의 연속주행 데이터를 포함하고 있다. 또한 전방 카메라 데이터 외에도 5개의 라이다(LiDAR) 데이터 등도 포함하고 있으며 4개의 Class 정보(Vehicles, Pedestrians, Cyclists, Signs)와 1000개의 카메라 Segments 데이터를 포함하고 있다.
+ 이 Dataset은 Waymo의 자율주행 차량이 1950개 주행 구간에서 수집한 지역별, 시간별, 날씨별 데이터를 포함하고 있으며 각 구간은 10Hz, 20초의 연속주행 데이터를 포함하고 있다. 즉 20,000,000개 이상의 프레임 데이터와 시간 환산 시 500시간이 넘는 데이터이다. 또한 전방 카메라 데이터 외에도 5개의 라이다(LiDAR, 중거리 LiDAR 1개, 단거리 LiDAR 4개) 데이터 등도 포함하고 있으며 4개의 Class 정보(Vehicles, Pedestrians, Cyclists, Signs)와 1000개의 카메라 Segments 데이터를 포함하고 있다.
 
+---
+<br>
 
-
-* **BDD100K**
+### 2.4. BDD100K
+(https://www.bdd100k.com/)
 
 
  UC 버클리 인공지능 연구실(BAIR)에서 공개한 Dataset으로 40초의 비디오 시퀀스, 720px 해상도, 30 fps의 동영상으로 취득된 100,000개의 비디오 시퀀스로 구성된다. 해당 Dataset에는 다양한 날씨 조건은 물론, GPS 정보, IMU 정보, 시간 정보도 포함되어 있다. 또한 차선 및 주행 가능 영역에 대한 라벨링이 되어있다. 그리고 버스, 신호등, 교통 표지판, 사람, 자전거, 트럭, 자동차 등의 정보가 담긴 100,000개의 이미지에 라벨링이 완료된 2D Bounding Box가 포함되어 있다.
 
  BDD100K는 이와 같은 정보를 통해 물체 검출, 세그먼테이션, 운전 가능 지역, 차선 검출 등의 Task 수행이 가능하다.
 
-
-
-* **PASCAL VOC Dataset**
-
-
-
- 위의 데이터셋 중 자율주행 인지에 가장 자주 쓰이는 KITTI Dataset을 이용하여 우선 학습을 진행하고, 학습의 성능을 향상시키거나 변경시키기 위해 다른 Dataset도 추가적으로 사용해볼 계획이다.
-
-***KITTI Dataset Link : http://www.cvlibs.net/datasets/kitti/***
-
-
-
-
-
-
+---
+<br>
 
 
 ---
@@ -308,7 +339,7 @@ pip install -r requirements.txt
 
 
 
-YOLOv5의 경우에는 Yolov5 PyTorch라는 Dataset Format을 사용하고 있다.
+YOLO의 경우에는 Yolov5 PyTorch라는 Dataset Format을 사용하고 있다.
 
 
 
@@ -939,6 +970,16 @@ Results saved to runs\train\exp
 ---
 ## 4. Evaluation & Analysis
 
+### 4. 1. yolov5s
+
+### 4. 2. Epoch 25
+
+### 4. 3. Epoch 50
+
+### 4. 4. Epoch 100
+
+
+
 
 ---
 ## 5. Related Work
@@ -952,4 +993,7 @@ Results saved to runs\train\exp
 
 ## Reference
 
-* https://doi.org/10.3390/s19030594
+* Vehicle Detection in Urban Traffic Surveillance Images Based on Convolutional Neural Networks with Feature Concatenation / https://doi.org/10.3390/s19030594
+* Are we ready for autonomous driving? The KITTI vision benchmark suite / https://ieeexplore.ieee.org/document/6248074
+* Top 5 Autonomous Driving Dataset Open-Sourced At CVPR 2020 / https://analyticsindiamag.com/top-5-autonomous-driving-dataset-open-sourced-at-cvpr-2020/
+* You Only Look Once: Unified, Real-Time Object Detection / https://arxiv.org/abs/1506.02640
