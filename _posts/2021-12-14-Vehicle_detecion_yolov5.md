@@ -234,10 +234,15 @@ YOLO는 'You Only Look Once'의 약자로 2016년 Joseph Redmon이 CVPR에서 �
 
 
 * **You Only Look Once**
+
   YOLO는 ROI등의 기법 사용 없이 이미지 전체를 단 한번만 본다.
+
 * **Unified Detection**
+  
   다른 객체 탐지 모델 들은 다양한 전처리 모델과 인공 신경망을 결합해서 사용하지만, YOLO는 단 하나의 인공신경망에서 이를 전부 처리한다. 이런 특징 때문에 YOLO가 다른 모델보다 간단해 보인다.
+  
 * **Real-Time Object Detection**
+
   2단계의 객체 탐지 모델들에 비해서 매우 빠르게 객체 탐지가 가능하기 때문에 실시간으로 사용이 가능하다.
 
 
@@ -250,7 +255,35 @@ YOLO는 'You Only Look Once'의 약자로 2016년 Joseph Redmon이 CVPR에서 �
 
 * **Pre-trained Network**
 
- 
+   위의 이미지 중 좌측부터 6개의 Layer Box는 Pre-trained Network로 GooLeNet을 사용해 ImageNet 1000-class Dataset을 사전에 학습하고 이를 Fine-tuning한 네트워크이다. 이 사전학습 네트워크는 총  20개의 합성곱 레이어(Convolutional Layer)로 이루어져 있다. Fine-tuning 과정에서의 특이한 점은 ImageNet의 이미지는 224*224의 크기를 갖지만 이미지를 의도적으로 2배 키워 해당 데이터를 학습에 사용하였다.
+
+* **Reduction Layer**
+
+   YOLO는 1x1의 합성곱 레이어(Convolutional Layer)를 교대로 적용하여 이를 이용하여 Feature Space를 축소시켜(reduce), 계산 속도를 향상시켰다.
+
+* **Training Layer**
+
+   2개의 Fully-Connected Layer로 이루어져 있으며, 앞선 네트워크에서 학습한 Feature를 토대로 Class probability와 Bounding Box의 위치를 학습하고 예측한다. YOLO의 최종 출력은 7x7x30의 예측 텐서(prediction tensors)로 나온다.
+
+
+
+여기까지가 YOLO에 대한 간략하면서도 전체적인 설명이었다.
+
+이번 프로젝트에서 사용할 YOLOv5는 이러한 YOLO의 5번째 버전이라는 뜻이다. 다만, 기존의 버전들과의 차이점이 있다면 YOLOv5는 YOLO를 처음 고안한 Joseph Redmon에 의해 탄생된 것이 아니라는 점이다. YOLOv5는 Glenn Jocher가 만든 것으로 속도 측면에서는 기존의 YOLO 이외에도 다른 객체 탐지 모델에 비해 탐지 속도가 매우 빠르다는 점이다.
+
+
+
+<center><img src ="https://user-images.githubusercontent.com/26833433/136763877-b174052b-c12f-48d2-8bc4-545e3853398e.png"></center>
+
+
+
+YOLOv5가 객체 탐지(Object Detection) 모델 중에 매우 빠른 편에 속하므로, 실시간 요소에 적용하기 적합하며, 이러한 이유로 본 프로젝트, 즉 자율주행의 객체 탐지 모델에 사용하기 유리할 것으로 판단되어 YOLOv5를 본 프로젝트에서 사용하기로 하였다.
+
+<br>
+
+---
+
+**[YOLOv5 Setting]**
 
 <br>
 
@@ -259,7 +292,9 @@ YOLO는 'You Only Look Once'의 약자로 2016년 Joseph Redmon이 CVPR에서 �
 ```powershell
 cd F:\project
 pwd
+```
 
+```plaintext
 Path
 ----
 F:\project
@@ -269,7 +304,9 @@ F:\project
 
 ```powershell
 git clone https://github.com/ultralytics/yolov5
+```
 
+```plaintext
 Cloning into 'yolov5'...
 remote: Enumerating objects: 10222, done.
 remote: Total 10222 (delta 0), reused 0 (delta 0), pack-reused 10222
@@ -281,19 +318,23 @@ Resolving deltas: 100% (7066/7066), done.
 
 ```powershell
 ls
+```
 
+```plaintext
     디렉터리: F:\project
 
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 d-----      2021-12-16   오후 2:09                yolov5
+```
 
+```powershell
 cd yolov5
 ls
+```
 
-
-
+```plaintext
     디렉터리: F:\project\yolov5
 
 
@@ -326,7 +367,9 @@ d-----      2021-12-16   오후 2:09                utils
 
 ```powershell
 cat requirements.txt
+```
 
+```plaintext
 # pip install -r requirements.txt
 
 # Base ----------------------------------------
@@ -380,7 +423,7 @@ pip install -r requirements.txt
 
 
 
-자율주행 자동차의 이미지 검출 모델 학습에 사용되는 Dataset들은 모두 통일된 Format으로 존재하는 것이 아니라, 객체가 존재하는 곳을 표현하는 Anchor Box의 좌표값에 대한 Labeling 방법, 그리고 객체의 종류를 정리해놓은 Annotation의 방법이 서로 다르기 때문에 사용할 Dataset의 Format을 확인하여 Yolov5의 학습에 적합한 형태로 가공해주어야 한다.
+자율주행 자동차의 이미지 검출 모델 학습에 사용되는 Dataset들은 모두 통일된 Format으로 존재하는 것이 아니라, 객체가 존재하는 곳을 표현하는 Bounding Box의 좌표값에 대한 Labeling 방법, 그리고 객체의 종류를 정리해놓은 Annotation의 방법이 서로 다르기 때문에 사용할 Dataset의 Format을 확인하여 Yolov5의 학습에 적합한 형태로 가공해주어야 한다.
 
 
 
@@ -396,6 +439,10 @@ YOLO의 경우에는 Yolov5 PyTorch라는 Dataset Format을 사용하고 있다.
 
 
 이제 본격적으로 YOLOv5을 Preprocessing이 완료된 Dataset을 이용하여 학습을 진행해주면 된다.
+
+
+
+
 
 학습에 앞서 YOLOv5에 맞는 torch/PyTorch, torchvision, torchaudio, cudatoolkit을 설치해주어야 한다.
 
@@ -415,15 +462,33 @@ pip3 install torch==1.10.0+cu102 torchvision==0.11.1+cu102 torchaudio===0.10.0+c
 
 
 
-
-
-
-
-
+ 우리는 자율주행 자동차의 상황을 가정하여, 정확도도 중요하지만 더 중요한 것은 객체 검출의 빠른 응답성이며, 컴퓨팅 환경의 특성상 큰 가중치 모델(ex. YOLOv5l, YOLOv5x) 등의 학습에 어려움이 있으므로, **YOLOv5s** pre-trained model을 학습 가중치로 사용한다.
 
 ```powershell
 python train.py --img 416 --batch 16 --epochs 100 --data 'Dataset/KITTI_YOLOv5/data.yaml' --weights yolov5s.pt --cache
+```
 
+* **--img** : Dataset image의 size (1:1 비율 기준)
+
+* **--batch** : 학습에 사용할 batch의 사이즈 (Iteration 횟수 = Dataset Image 개수 / Batch Size)
+
+* **--epochs** : 학습에 사용할 Epochs의 횟수
+
+* **--data** : Dataset의 정보(YOLO Format)가 저장된 YAML 파일의 위치
+
+* **--cfg** : 모델의 YAML 파일의 위치
+
+* **--weights** : 학습에 사용할 가중치 모델 (custom model 혹은 pretained model; yolov5s.pt, yolov5l.pt 등)
+
+* **--device** : 학습에 사용할 하드웨어 선정 CPU(cpu) / GPU(0, 1, 2, 3) 
+
+  Nvidia CUDA 가속 가능 하드웨어 사용시 GPU 사용 추천
+
+* **--name** : 학습 정보를 'runs' 폴더에 저장할 때 사용할 이름 (default = exp, exp2, exp3, ...)
+
+* **--resume** : 학습을 재개를 명령하는 변수, 학습 과정 중 중간에 종료된 경우 해당 명령어 사용시 마지막으로 시행했던 epoch부터 다시 시작하며 weights는 'last.pt' 사용
+
+```plaintext
 train: weights=yolov5s.pt, cfg=, data=Dataset/KITTI_YOLOv5/data.yaml, hyp=data\hyps\hyp.scratch.yaml, epochs=100, batch_size=16, imgsz=416, rect=False, resume=False, nosave=False, noval=False, noautoanchor=False, evolve=None, bucket=, cache=ram, image_weights=False, device=, multi_scale=False, single_cls=False, adam=False, sync_bn=False, workers=8, project=runs\train, name=exp, exist_ok=False, quad=False, linear_lr=False, label_smoothing=0.0, patience=100, freeze=0, save_period=-1, local_rank=-1, entity=None, upload_dataset=False, bbox_interval=-1, artifact_alias=latest
 github: up to date with https://github.com/ultralytics/yolov5
 YOLOv5  v6.0-147-g628817d torch 1.10.0+cu102 CUDA:0 (NVIDIA GeForce GTX 970, 4096MiB)
