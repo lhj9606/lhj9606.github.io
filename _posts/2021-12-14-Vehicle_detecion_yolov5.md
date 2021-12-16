@@ -561,9 +561,22 @@ pip install -r requirements.txt
 
 이렇게 서로 다른 Dataset의 Directory 구조와 Annotation 방법, 확장자를 YOLO 형식에 맞게 바꿔주는 것은 꽤 고단한 일이다.
 
+KITTI Format의 Image Size와 Bounding Box의 Size를 입력으로 받는다면 YOLO 형식으로 다음과 같이 바꿔줄 수 있을 것이다.
 
+```python
+def convert_boundig_box_coordinate(img_size, box_size): 
+    x_center = (box_size[0] + box_size[1])/2.0 
+    y_center = (box_size[2] + box_size[3])/2.0
+    width = box_size[1] - box_size[0]
+    height = box_size[3] - box_size[2]
+    x_norm = x_center./img_size[0]
+    y_norm = y_center./img_size[1]
+    w_norm = width./img_size[0]
+    h_norm = height./img_size[1]
+    return(x_norm, y_norm, w_norm, h_norm)
+```
 
-직접 코딩으로 진행해도 되는 일이지만, 많은 수고가 따르는 일이다.
+이렇게 직접 코딩으로 진행해도 되는 일이지만, 단순 좌표 계산 이외에도 파일 형식 변환, Annotation List 확인 등 많은 작업이 필요하고 수고가 따르는 일이다. 
 
 그러나 다행이다. 이러한 작업을 수월하게 도와주는 사이트인 **'[Roboflow](https://roboflow.com/)'**가 존재한다. 해당 사이트는 다양한 종류의 Dataset Format을 다른 종류의 Dataset Format으로 바꿔줄 수 있는 기능을 제공한다. YOLOv5 사용에서도 해당 사이트를 이용해서 Dataset Format을 바꾸는 것을 권장하고 있다.
 
@@ -944,6 +957,29 @@ Results saved to runs\train\exp3
 
 ---
 
+* **epoch = 25**
+
+  ```powershell
+  python train.py --img 416 --batch 16 --epochs 25 --data 'Dataset/KITTI_YOLOv5/data.yaml' --weights yolov5s.pt --cache
+  ```
+
+  ```
+  Model Summary: 213 layers, 7034398 parameters, 0 gradients, 15.9 GFLOPs
+                 Class     Images     Labels          P          R     mAP@.5 mAP@.5:.95: 100%|██████████| 47/47 [00:15<0
+                   all       1496      10764      0.775       0.67      0.734      0.438
+               Cyclist       1496        355       0.84        0.6      0.681      0.346
+              DontCare       1496       2331      0.536        0.2      0.267     0.0749
+                  Misc       1496        186      0.779      0.699      0.756      0.442
+        Person_sitting       1496         22      0.615      0.437      0.527      0.235
+                  Tram       1496        130      0.788      0.915      0.939      0.549
+                 Truck       1496        228      0.914       0.93      0.967      0.698
+                   Van       1496        590      0.867      0.853      0.906      0.631
+                   car       1496       5948      0.852      0.901      0.942      0.688
+                person       1496        974      0.787      0.498       0.62      0.272
+  ```
+
+  * 학습 소요시간 : 0.639 hrs
+
 이후 ```epoch = 50```, ```epoch = 100```, ```epoch = 100 without pre-trained weights``` 학습을 진행하였다.
 
 * **epoch = 50**
@@ -1016,30 +1052,36 @@ Results saved to runs\train\exp3
   * 학습 소요시간 : 2.529 hrs
 
 
-
-
-
-
 ---
 ### 3.4. Inference(Detection)
 
-- --weights : 감지에 사용할 모델
+```powershell
+python detect.py --weights runs/train/exp/weights/best.pt --source 1
+```
 
-- --source : 분석할 이미지 경로
+```epoch=100```의 값이 ```runs/train/exp/weights/best.pt```에 위치하므로 해당 값을 사용
 
-- --img-size : 추론할 이미지 사이즈 (기본값: 640)
+하드웨어 부하를 줄이기 위하여 외장 캡쳐보드를 이용하여 Game Graphics Real-time Capture 하여 Detection 진행
 
-- --view-img : 결과를 보고 싶은 경우 입력
-
-- --classes : 원하는 클래스만 필터링할 수 있다. (e.g. --class 0 2 3)
-
-- --name : 결과를 저장할 이름
-
-- --exist-ok : 기존 파일이 존재하면 덮어씌운다
-
-  **[출처]** [YOLOv5 내용 일부 정리](https://blog.naver.com/remocon33/222252966511)|**작성자** [혼새미로](https://blog.naver.com/remocon33)
+```--source 1``` : 외장 캡쳐보드의 장치 주소
 
 
+
+- **--weights** : Detection에 사용한 Weights 값 (학습으로 얻은 ```best.pt``` 혹은 pre-trained model ```yolov5l.pt``` 등 사용 가능)
+- **--conf** : Bounding Box를 그리는 기준이 되는 Threshold 값으로 0 ~ 1 사이의 값
+- **--source** : Detection을 시행할 Image, Video 등의 경로
+  * ```--source 0 # webcam```
+  * ```--source 1 # capture board, etc...```
+  * ```--source image.jpg # image```
+  * ```--source video.mp4 # video```
+  * ```--source path/ # Whole directory```
+  * ```--source path/*.jpg # glob```
+  * ```--source 'https://youtu.be/something' # Youtube```
+  * ```--source 'rtsp://something.com/video.mp4' # RTSP, RTMP, HTTP Stream```
+- **--img** : Detection Source(Image or Video) Size (기본값: 640)
+- **--classes** : 원하는 클래스만 Filtering. (e.x. ```--class 0 2 3```)
+- **--name** : Detection 결과를 저장할 이름
+- **--exist-ok** : 기존 파일이 존재하면 덮어씌운다.
 
 
 ---
