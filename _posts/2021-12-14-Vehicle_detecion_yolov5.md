@@ -15,15 +15,14 @@ pin: true
 <center><b> Hanyang University 2021 Fall / AI+X:Deep Learning / Final Project </b></center>
 
 ---
-
 ## Member
 
 |  이름  |    학과    |    학번    |        E-mail         | 역할 |
 | :----: | :--------: | :--------: | :-------------------: | :----:|
 | 이홍준 | 기계공학부 | 2015011203 | lhj9606@hanyang.ac.kr | Everything |
 
-------
 
+---
 ## 0. Video Summary
 
 
@@ -47,7 +46,6 @@ YOUTUBE EMBEDDED / LINK INSERT
 <center><b>Tesla의 자율주행 예시 영상</b></center>
 
 ---
-
 ### 1.1. Need
 
 자율주행 자동차는 '인지', '판단', '제어'의 3가지 Step으로 스스로 주행을 관장하는데, '인지' 단계에서 ***카메라(Camera), 레이더(Rader), 라이다(LiDAR)*** 등의 여러 센서로 부터 취합한 정보를 바탕으로 차량 주변의 환경을 인식하며, 이를 토대로 '판단'과 '제어'를 수행한다. 즉 **'인지'** 단계가 자율주행 알고리즘에 있어 가장 첫번째 단계이므로, 자율주행에서 가장 중요하면서도 차량의 주변 환경을 명확하게 인식해야만 안전한 주행이 가능하기 때문에 매우 중요한 단계라고 할 수 있다.
@@ -60,8 +58,8 @@ YOUTUBE EMBEDDED / LINK INSERT
 
 <center><b>CNN을 활용한 Vehicle Detection의 사례 (a) Faster R-CNN, (b) DP-SSD300, (c) SSD300, (d) DP-SSD300</b></center>
 
-------
 
+------
 ### 1.2. Objective
 
  본 프로젝트는 YOLOv5를 기반으로 하여, 자율주행 환경에 필요한 이미지들을 모델에 학습하고, 자율주행 환경에 필요한 이미지 검출 속도에 맞게 모델을 튜닝할 예정이다. 
@@ -69,7 +67,7 @@ YOUTUBE EMBEDDED / LINK INSERT
  학습된 모델을 토대로 실제 차량에 탑재하여, 실제 차량과 그 이외의 주행 상황에 등장 가능한 물체에 대한 인식을 검출하는 시도를 하면 좋겠지만, 실제 차량에 컴퓨터와 카메라를 탑재하여 이를 검증해보는 것이 어렵다. 따라서, 본 프로젝트에서는 자율주행 환경을 모사 가능한 일부 게임 (ex. *GTA5, Euro Truck Simulator, Forza Horizon* 등)의 화면 데이터를 카메라 데이터로 대응시켜 모델의 객체 검출이 잘 이뤄지는지 확인해볼 예정이다.
 
 
-
+---
 ## 2. Datasets
 
 자율주행을 위한 딥러닝 학습용 Open Dataset은 다양하게 공개가 되어있다. 
@@ -133,7 +131,7 @@ YOUTUBE EMBEDDED / LINK INSERT
 
 
 
-
+---
 ## 3. Methodology
 
 ### [Computing Environment]
@@ -144,7 +142,7 @@ YOUTUBE EMBEDDED / LINK INSERT
 * *GPU : NVIDIA GeForce GTX970 4GB (Driver version - 497.09, CUDA version - 11.5)* 
 
 
-
+---
 ### 3.1. YOLOv5(You Only Look Once)
 
 
@@ -204,7 +202,7 @@ thop  # FLOPs computation
 
 
 
-
+---
 ###  3.2. Dataset Pre-Processing
 
 ```
@@ -214,21 +212,26 @@ $ cd yolov5
 $ pip install -r requirements.txt
 ```
 
-
+---
 ### 3.3. Dataset Training
 
+
+---
 ### 3.4. YOLOv5 (You Only Look Once)
 
+
+---
 ### 3.5. OpenCV
 
 
 
 
 
-
+---
 ## 4. Evaluation & Analysis
 
 
+---
 ## 5. Related Work
 
 
