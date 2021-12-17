@@ -30,7 +30,7 @@ pin: true
 
 
 
-<iframe width=640 height="480" src="https://www.youtube.com/embed/7J8GE4Yonug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<center><iframe width=640 height="480" src="https://www.youtube.com/embed/7J8GE4Yonug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
 
 [https://www.youtube.com/watch?v=7J8GE4Yonug](https://www.youtube.com/watch?v=7J8GE4Yonug)
 
