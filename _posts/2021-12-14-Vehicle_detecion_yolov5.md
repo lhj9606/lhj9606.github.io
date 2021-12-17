@@ -1108,9 +1108,9 @@ Real-Time Inference 결과 Forza Horizon 5 게임에 비해 정확도와 검출 
 
 
 ---
-### 3.5. Detection with Pre-trained Weights(YOLOv5s.pt)
+### 3.5. Detection with Pre-trained Model(YOLOv5s)
 
-우리가 사용한 KITTI Dataset으로 학습한 모델 이외에 기존의 COCO Dataset으로 pre-trained 된 YOLOv5s.pt를 COCO Label을 이용하여 Object Detection을 시행해보았다.
+우리가 사용한 KITTI Dataset으로 학습한 모델 이외에 기존의 COCO Dataset으로 pre-trained 된 YOLOv5s를 COCO Label을 이용하여 Object Detection을 시행해보았다.
 
 
 
@@ -1132,7 +1132,7 @@ Real-Time Inference 결과 Forza Horizon 5 게임에 비해 정확도와 검출 
 
 ---
 
-두 게임 모두 대체적으로 Pre-trained weights(YOLOv5s.pt)만을 사용한 모델이 KITTI Dataset으로 학습한 Custom 모델에 비해서 차량 검출 정확도가 높게 보였다. 다만 기타 사물에 대해서는 오검출 요소도 가끔 존재하였다.
+두 게임 모두 대체적으로 Custom Training없이 Pre-trained Model(YOLOv5s)만을 사용한 모델이 KITTI Dataset으로 학습한 Custom 모델에 비해서 차량 검출 정확도가 높게 보였다. 다만 기타 사물에 대해서는 오검출 요소도 가끔 존재하였다. 이는 YOLOv5s의 학습 단계에서 COCO Dataset의 데이터량과 학습 반복의 효과로 인해 우리의 모델보다 더욱 좋은 성능을 내는 것처럼 보인다.
 
 ---
 ## 4. Evaluation & Analysis
@@ -1147,32 +1147,88 @@ Real-Time Inference 결과 Forza Horizon 5 게임에 비해 정확도와 검출 
 
 - **Recall** : 재현률을 뜻하며, 입력값이 참일때, 예측이 참으로 나타났는지 확인할때 사용한다. 얼마나 잘 검출하는지를 알 수 있는 척도이다.
 
-  * Recall과 Precision 예시
+  * *Recall과 Precision 예시*
 
     사람을 검출하고자 할 때, 사진 속 10명의 사람 중 5명을 검출했다면, recall = 5/10 = 50%
 
     그런데 사람은 5명만 검출했는데 총 20개의 검출 결과가 있었다면, precision = 5/20 = 25%
 
-- **AP (Average Preicision)** : 예측된 결과가 얼마나 정확한지 나타냅니다.
+- **F1-Score** : Recall과 Precision의 조화평균으로, 데이터 불균형 문제를 고려할 수 있는 지표로 사용 가능
 
-- **mAP (mean Average Preicision)** :
+- **AP (Average Precision)** : 예측된 결과가 얼마나 정확한지 나타냅니다.
+
+- **mAP (mean Average Precision)** : AP의 평균값으로 합성곱 신경망(Convolutional Neural Network)의 모델 성능 평가의 지표로 사용된다.
+
+<br>
+
+---
+
+### 4.2. Analysis
 
 
+
+---
+
+* **Epoch = 25**
+
+<center><img src="\images\25f1pr.png" style="zoom: 67%;" /></center>
+
+<center><img src="\images\25r.png" style="zoom: 67%;" /></center>
+
+
+
+---
+
+* **Epoch = 50**
+
+<center><img src="\images\50f1pr.png" style="zoom: 67%;" /></center>
+
+<center><img src="\images\50r.png" style="zoom: 67%;" /></center>
+
+
+
+---
+
+* **Epoch = 100**
+
+<center><img src="\images\100f1pr.png" style="zoom: 67%;" /></center>
+
+<center><img src="\images\100r.png" style="zoom: 67%;" /></center>
+
+
+
+---
+
+* **Epoch = 100 (without pretrained weights)**
+
+<center><img src="\images\100f1prx.png" style="zoom: 67%;" /></center>
+
+<center><img src="\images\100rx.png" style="zoom: 67%;" /></center>
+
+---
+
+Epoch가 낮을수록 학습에 있어서 Validation 과정에서의 Loss가 줄어들고, mAP 지수가 상승하는 모습을 확인할 수 있었다. 또한 Epoch가 같을때, Pre-trained Weights를 사용 유무에 의한 차이는 눈에 띄게 나타나지는 않았지만, 같은 Class (ex. Person_sitting)의 경우 학습 추세가 다르게 나타난 것을 확인할 수 있었다.
+
+또한, epoch에 상관없이 F1-Curve에서 Person과 Person_sitting, 그리고 DontCare의 곡선이 평균 아래에 위치하고 있는 것을 확인하였다.
+
+이를 통해서 해당 데이터들이 다른 데이터들에 비해 데이터가 적은 데이터 불균형이 있는 것은 아닐까 생각을 해보았으며, DontCare의 경우 주행상황에서 고려하지 않아도 될 물체에 대해 동일한 라벨링을 적용하였으므로, 모델로 하여금 일관적인 특징(Feature)를 학습하기 힘들어 다음과 같은 결과가 나오지 않았을까 생각한다.
 
 ---
 
 * **Detection Comparison @ Forza Horizon 5**
 
 <iframe width="640" height="480" src="https://www.youtube.com/embed/uy5b4_AXwic" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-Epochs 횟수 차이에 의한 Detection 매우 큰 차이는 없지만, 특이하게도 Epochs가 낮은 학습일때, 객체를 더욱 빠르고 정확하게 검출하는 모습을 보여주었다. 
-
 ---
 
 * **Detection Comparison @ GTA 5**
 
 <iframe width="640" height="480" src="https://www.youtube.com/embed/Yp1buDkcVbo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-ddd
+---
+
+두 게임 모두 Epochs 횟수 차이에 의한 Detection 매우 큰 차이는 없지만, 특이하게도 Epochs가 낮은 학습일때, 객체를 더욱 빠르고 정확하게 검출하는 모습을 보여주었다. 개인적인 생각으로는 학습이 진행될수록 모델은 보다 실제 자동차에 가까운 특징(Feature)를 갖고 있지 않으면, 게임 내의 자동차를 자동차로 인식하지 않는 것이라고 생각한다.
+
+<br>
 
 ---
 ## 5. Related Work
@@ -1228,3 +1284,10 @@ ddd
 * Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks / [https://arxiv.org/abs/1506.01497](https://arxiv.org/abs/1506.01497)
 * You Only Look Once — 다.. 단지 한 번만 보았을 뿐이라구! / [https://medium.com/curg/you-only-look-once-%EB%8B%A4-%EB%8B%A8%EC%A7%80-%ED%95%9C-%EB%B2%88%EB%A7%8C-%EB%B3%B4%EC%95%98%EC%9D%84-%EB%BF%90%EC%9D%B4%EB%9D%BC%EA%B5%AC-bddc8e6238e2](https://medium.com/curg/you-only-look-once-%EB%8B%A4-%EB%8B%A8%EC%A7%80-%ED%95%9C-%EB%B2%88%EB%A7%8C-%EB%B3%B4%EC%95%98%EC%9D%84-%EB%BF%90%EC%9D%B4%EB%9D%BC%EA%B5%AC-bddc8e6238e2)
 
+<br>
+
+---
+
+## Role
+
+* **이홍준** : 자료 탐색, 코드, 결과 분석, 블로그 작성, 영상 제작 및 녹음
