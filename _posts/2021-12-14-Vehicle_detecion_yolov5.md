@@ -183,6 +183,7 @@ KITTI 홈페이지에 간단한 가입을 마친 후에서 'Object' 탭 내의 '
 * *CPU : Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz*
 * *RAM : 32GB*
 * *GPU : NVIDIA GeForce GTX970 4GB (Driver version - 497.09, CUDA version - 11.5)* 
+* *Capture Board : AVerMedia GC553*
 * *Anaconda Command line client (version 1.9.0)*
 
 
@@ -1065,8 +1066,6 @@ python detect.py --weights runs/train/exp/weights/best.pt --source 1
 
 ```--source 1``` : 외장 캡쳐보드의 장치 주소
 
-
-
 - **--weights** : Detection에 사용한 Weights 값 (학습으로 얻은 ```best.pt``` 혹은 pre-trained model ```yolov5l.pt``` 등 사용 가능)
 - **--conf** : Bounding Box를 그리는 기준이 되는 Threshold 값으로 0 ~ 1 사이의 값
 - **--source** : Detection을 시행할 Image, Video 등의 경로
@@ -1083,73 +1082,142 @@ python detect.py --weights runs/train/exp/weights/best.pt --source 1
 - **--name** : Detection 결과를 저장할 이름
 - **--exist-ok** : 기존 파일이 존재하면 덮어씌운다.
 
+---
+
+**Real-time Vehicle Detection @ Froza Horizon 5**
 
 ---
-### 3.5. OpenCV
+
+```epoch=100```의 훈련으로 얻은 weights를 이용하여 'Forza Horizon 5'에서 Detection 진행
+
+<center><iframe width="640" height="480" src="https://www.youtube.com/embed/85H-yvMvFVA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+
+Real-Time Inference 결과 YOLOv5의 특성상 정확하지는 않아도 빠르게 검출이 진행되는 모습을 확인할 수 있었다.
+
+---
+
+**Real-time Vehicle Detection @ GTA 5**
+
+---
+
+```epoch=100```의 훈련으로 얻은 weights를 이용하여 'GTA 5'에서 Detection 진행
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/wDCoFQmHnZk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Real-Time Inference 결과 Forza Horizon 5 게임에 비해 정확도와 검출 속도가 다소 안좋아진 모습을 확인할 수 있었다.
+
+
+---
+### 3.5. Detection with Pre-trained Weights(YOLOv5s.pt)
+
+우리가 사용한 KITTI Dataset으로 학습한 모델 이외에 기존의 COCO Dataset으로 pre-trained 된 YOLOv5s.pt를 COCO Label을 이용하여 Object Detection을 시행해보았다.
 
 
 
+---
 
+**Object Detection with pre-trained weights(YOLOv5s.pt) @ Froza Horizon 5**
+
+---
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/BnYBpTUsrbw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+
+**Object Detection with pre-trained weights(YOLOv5s.pt) @ GTA 5**
+
+---
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/dI3t2v1Wt18" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+
+두 게임 모두 대체적으로 Pre-trained weights(YOLOv5s.pt)만을 사용한 모델이 KITTI Dataset으로 학습한 Custom 모델에 비해서 차량 검출 정확도가 높게 보였다. 다만 기타 사물에 대해서는 오검출 요소도 가끔 존재하였다.
 
 ---
 ## 4. Evaluation & Analysis
 
 
 
-- **batch** : 딥러닝에서 배치는 모델의 가중치를 한번 업데이트 시킬 때 사용되는 샘플들의 묶음을 의미합니다. 만약 총 1000개의 훈련 샘플이 있는데, 배치 사이즈가 20이라면, 20개의 샘플 단위마다 모델의 가중치를 한번씩 업데이트 시킵니다. 그러면, 총 50번 가중치가 업데이트 됩니다.
+---
 
-- **epoch** : 딥러닝에서 에포크는 학습의 횟수를 의미합니다. 만약, 에포크가 10이고 배치 사이즈가 20이면, 가중치를 50번 업데이트 하는 것을 총 10번 반복합니다. 결과적으로 가중치가 총 500번 업데이트 됩니다.
+### 4.1. Terminology
 
-- 배치와 에포크 : 배치 사이즈가 너무 크면 한번에 처리해야 할 양이 그만큼 많기 때문에 학습 속도가 느려집니다. 반대로, 너무 적은 샘플을 참조해서 가중치가 자주 업데이트 되기 때문에 비교적 불안정하게 훈련됩니다.
+- **Precision** : 정밀도를 뜻하며, 검출 결과 중 옳게 검출한 비율을 의미한다.
 
-- **TP (True Positive)** : 옳은 검출을 의미합니다.
+- **Recall** : 재현률을 뜻하며, 입력값이 참일때, 예측이 참으로 나타났는지 확인할때 사용한다. 얼마나 잘 검출하는지를 알 수 있는 척도이다.
 
-- **FP (False Positive)** : 다른 클래스의 객체로 검출한 것을 의미합니다. (틀린 검출)
+  * Recall과 Precision 예시
 
-- **FN (False Negative)** : 검출되었어야 하는 물체인데 검출되지 않은 것을 의미합니다.
+    사람을 검출하고자 할 때, 사진 속 10명의 사람 중 5명을 검출했다면, recall = 5/10 = 50%
 
-- **TN (True Negative)** : 검출되지 말아야 할 것이 검출되지 않음을 의미합니다.
+    그런데 사람은 5명만 검출했는데 총 20개의 검출 결과가 있었다면, precision = 5/20 = 25%
 
-- **Precision** : 정밀도라고도 하며, 모든 검출 결과 중 옳게 검출한 비율을 의미합니다.
+- **AP (Average Preicision)** : 예측된 결과가 얼마나 정확한지 나타냅니다.
 
-- **Recall** : 재현률이라고도 하며, 입력으로 positive를 주었을 때 얼마나 잘 positive로 예측하는지 나타내는데 사용됩니다. 간단히 말하면, 얼마나 잘 검출하냐를 말합니다.
-
-- Recall과 Precision 예시 : 사람을 검출하고자 할 때, 사진 속 4명의 사람 중 3명을 검출했다면, recall = 3/4 = 75% 입니다. 그런데 사람은 3명만 검출했는데 총 6개의 검출 결과가 있었다면, precision = 3/6 = 50% 입니다.
-
-- **AP** (Average Preicision) : 예측된 결과가 얼마나 정확한지 나타냅니다.
-
-- **mAP** (mean Average Preicision) :
-
-- **Ground Truth** : 참값
-
-- **IoU (Intersection over Union)** : 실제 바운더리 박스와 예측된 바운더리 박스 사이의 교집합을 구해 정확도를 구하는 것입니다. 이값은 0.5 이상이면 제대로 검출되었다고 판단합니다.
-
-  **[출처]** [YOLOv5 내용 일부 정리](https://blog.naver.com/remocon33/222252966511)|**작성자** [혼새미로](https://blog.naver.com/remocon33)
-
-
-
-### 4.1. yolov5s
-
-### 4.2. Epoch 25
-
-### 4.3. Epoch 50
-
-### 4.4. Epoch 100
-
-### 4.5. Epoch 100 (No pre-trained Weights)
-
+- **mAP (mean Average Preicision)** :
 
 
 
 ---
+
+* **Detection Comparison @ Forza Horizon 5**
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/uy5b4_AXwic" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+Epochs 횟수 차이에 의한 Detection 매우 큰 차이는 없지만, 특이하게도 Epochs가 낮은 학습일때, 객체를 더욱 빠르고 정확하게 검출하는 모습을 보여주었다. 
+
+---
+
+* **Detection Comparison @ GTA 5**
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/Yp1buDkcVbo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+ddd
+
+---
 ## 5. Related Work
 
+* **인식된 물체 기반으로 제어 및 강화학습으로의 응용성**
 
-#### Autonomous Driving 
+  본 프로젝트에서 진행된 객체 감지 결과물을 이용하여 게임 내에서의 자동차의 자율주행 제어 요소로 활용이 가능할 것으로 예측된다. 
+
+  (예 : 전방 객체 탐지, 거리 추정 및 충돌 방지 / 차선 검출로 주행 가능 영역 도출 및 운행)
+
+* **현실의 객체로부터 Dataset을 구축하는 것 이외에도, 현실성 높은 그래픽 엔진을 통해 Dataset 구축**
+
+  현실의 Dataset이 아닌 고성능 컴퓨터 그래픽을 통해 만들어진 Dataset을 통해서 모델을 학습시킨다면, 현실 세계의 자율주행 자동차 학습에서 사용할 수 있을 것으로 기대된다.
+
+* **자율주행 자동차의 주변 환경 인지 및 물체 검출**
+
+  실제 자율주행 자동차에서 어떠한 알고리즘이 메인으로 사용되는지는 정확히 알 수 없지만, 딥러닝 기반의 객체 검출을 이용하므로, YOLO 혹은 R-CNN 네트워크 구조의 일부 변경으로 이러한 성능을 더욱 향상시킬 수 있을 것으로 기대된다.
+
+<br>
+
+---
 
 ## 6. Conclusion & Discussion
 
+본 프로젝트를 진행하면서 YOLO를 이용하여 1단계 객체 검출 모델을 트레이닝하고 객체 감지에 구현해보았다. 성능이 비록 좋다고는 할 수 없지만 빠른 프레임레이트(FPS)로 연산이 수행되는 점이 놀라웠으며, 빠르게 주변 상황을 인지해야하는 실제 차량에서 정확성의 문제만 해결하고 잘 구현하게 된다면 유용할 것이라 생각하였다.
 
+그러나, Real-Time Detection 결과 특정 게임에서는 매우 정확하진 않아도 차량 검출이 빠르게 잘 이뤄졌지만, 그렇지 않은 게임도 있었다. 이렇게 오차가 발생한 원인엔 다음과 같은 이유가 있을 것 같다.
+
+
+
+* **게임 그래픽의 현실과의 차이**
+
+  우리가 학습에 사용한 Dataset은 실제의 사물 이미지에 기반한 데이터이다. 따라서 YOLOv5 모델이 객체들의 특성(Feature)를 학습할 때, 현실의 물체에서 특성을 학습한 것으로, 컴퓨터 그래픽에 의해 현실성이 다소 떨어지는 그래픽에서의 특성과는 매치가 잘 되지 않았을 수도 있다.
+
+* **부족한 Epochs**
+
+  본 프로젝트를 진행하면서 하드웨어의 한계와 시간에 대한 제약으로 최대 Epoch를 100으로 설정하고 진행하였는데, 생각보다 학습이 잘 되지 않은 것 같다.
+
+  YOLOv5의 Github Repository를 확인해보니, epoch을 300이상 시행해줘야 모델이 어느정도 성능을 갖는다고 언급 되어있었으며, 300 이상 epoch을 진행해주면서 Overfitting이 발생할때 학습을 중단하는 방식으로 학습을 진행하는 것이 좋다고 적혀있었다. 다음 기회에는 Epoch을 300이상 설정하여 학습하도록 해봐야겠다는 생각이 들었다.
+
+* **Dataset의 Image Size 조절**
+
+  Roboflow를 이용하여 Dataset의 Transformation을 진행할 때, Image Size를 416x416으로 Stretch해서 사용하였다. YOLOv5s 학습에 사용가능한 최대 이미지 크기가 640x640 임을 고려하였을 때, 640x640으로 학습하였을 경우 성능이 더욱 좋았을 것 같다.
+
+<br>
 
 ## Reference
 
