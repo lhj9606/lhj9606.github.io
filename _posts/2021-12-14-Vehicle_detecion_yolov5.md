@@ -30,9 +30,9 @@ pin: true
 
 
 
-YOUTUBE EMBEDDED / LINK INSERT
+<iframe width=640 height="480" src="https://www.youtube.com/embed/7J8GE4Yonug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-
+[https://www.youtube.com/watch?v=7J8GE4Yonug](https://www.youtube.com/watch?v=7J8GE4Yonug)
 
 <br>
 
@@ -40,7 +40,7 @@ YOUTUBE EMBEDDED / LINK INSERT
 ---
 ## 1. Proposal (Option A)
 
- 4차 산업혁명 시대가 대두되면서, 여러 기술들이 발전하고 주목받고 있지만 그 중에서도 우리 생활에 밀접하게 관련있고, 접근성이 좋은 기술 중장 주목받는 기술 중 하나를 꼽자면 바로 '**자율주행**' 기술일 것이다. 이러한 자율주행 기술이 급격하게 발전하게 된 이유 중 하나는 Deep Learning(Deep Neural Network)의 발전, 그리고 CNN(Convolutional Neural Network) 등의 등장으로 인한 컴퓨터 비전(CV, Computer Vision) 분야의 많은 기술적 도약이 있었기에 가능해졌다.
+ 4차 산업혁명 시대가 대두되면서, 여러 기술들이 발전하고 주목받고 있지만 그 중에서도 우리 생활에 밀접하게 관련있고, 접근성이 좋은 기술 중 가장 주목받는 기술 중 하나를 꼽자면 바로 '**자율주행**' 기술일 것이다. 이러한 자율주행 기술이 급격하게 발전하게 된 이유 중 하나는 Deep Learning(Deep Neural Network)의 발전, 그리고 CNN(Convolutional Neural Network) 등의 등장으로 인한 컴퓨터 비전(CV, Computer Vision) 분야의 많은 기술적 도약이 있었기에 가능해졌다.
 
 
 
@@ -95,9 +95,9 @@ YOUTUBE EMBEDDED / LINK INSERT
 
 
 
-<img src="http://www.cvlibs.net/datasets/kitti/images/setup_top_view.png" style="zoom: 67%;" />
+<center><img src="\images\tt.PNG" style="zoom:80%;" /></center>
 
-<img src="http://www.cvlibs.net/datasets/kitti/images/passat_sensors_920.png" style="zoom:67%;" />
+<center><img src="\images\tt2.png" style="zoom:80%;" /></center>
 
 <center><b>KITTI Dataset 구축을 위해 사용되었던 Vehicle과 Sensor Setup</b></center>
 
@@ -256,7 +256,7 @@ YOLO는 'You Only Look Once'의 약자로 2016년 Joseph Redmon이 CVPR에서 �
 
 <center><img src="\images\yolo_arch.png" style="zoom: 67%;" /></center>
 
-전체적인 네트워크 신경만 구조는 총 24개의 합성곱 레이어(Convolutional Layer)와 2개의 Fully-Connected Layer를 사용하고 있다. 
+전체적인 네트워크 신경망 구조는 총 24개의 합성곱 레이어(Convolutional Layer)와 2개의 Fully-Connected Layer를 사용하고 있다. 
 
 * **Pre-trained Network**
 
@@ -1207,7 +1207,7 @@ Real-Time Inference 결과 Forza Horizon 5 게임에 비해 정확도와 검출 
 
 ---
 
-Epoch가 낮을수록 학습에 있어서 Validation 과정에서의 Loss가 줄어들고, mAP 지수가 상승하는 모습을 확인할 수 있었다. 또한 Epoch가 같을때, Pre-trained Weights를 사용 유무에 의한 차이는 눈에 띄게 나타나지는 않았지만, 같은 Class (ex. Person_sitting)의 경우 학습 추세가 다르게 나타난 것을 확인할 수 있었다.
+Epoch가 높을수록 학습에 있어서 Validation 과정에서의 Loss가 줄어들고, mAP 지수가 상승하는 모습을 확인할 수 있었다. 또한 Epoch가 같을때, Pre-trained Weights를 사용 유무에 의한 차이는 눈에 띄게 나타나지는 않았지만, 같은 Class (ex. Person_sitting)의 경우 학습 추세가 다르게 나타난 것을 확인할 수 있었다.
 
 또한, epoch에 상관없이 F1-Curve에서 Person과 Person_sitting, 그리고 DontCare의 곡선이 평균 아래에 위치하고 있는 것을 확인하였다.
 
