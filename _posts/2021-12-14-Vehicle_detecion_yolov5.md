@@ -95,7 +95,7 @@ pin: true
 
 
 
-<center><img src="\images\tt.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\tt.png" style="zoom:80%;" /></center>
 
 <center><img src="\images\tt2.png" style="zoom:80%;" /></center>
 
@@ -121,7 +121,7 @@ KITTI Dataset은 개조된 Volkswagen Passat B6을 이용하여 데이터를 수
 
 <center><b><span style="color:#6495ED">본 프로젝트에서는 프로젝트 진행 환경(HW, SW)을 고려하여 자율주행 인지에 가장 자주 쓰이는 KITTI Dataset을 이용하여 학습을 진행한다.</span></b></center>
 
-<center><img src="\images\KITTI_instruction.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\KITTI_instruction.png" style="zoom:80%;" /></center>
 
 <br>
 
@@ -556,7 +556,7 @@ pip install -r requirements.txt
 
 또한, 각각의 Format들은 Bounding Box의 Annotation에 사용하는 Bounding Box의 좌표값도 서로 다르다.
 
-<center><img src="\images\dataset_label.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\dataset_label.png" style="zoom:80%;" /></center>
 
 <br>
 
@@ -587,45 +587,45 @@ def convert_boundig_box_coordinate(img_size, box_size):
 
  **1 . Roboflow 접속 후 회원가입하여 로그인한다.**
 
-<center><img src="\images\roboflow1.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow1.png" style="zoom:80%;" /></center>
 
  **2 . Roboflow 로그인 이후, 기존 Workspace 내에서 새로운 Project를 생성해준다.**
 
-<center><img src="\images\roboflow2.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow2.png" style="zoom:80%;" /></center>
 
  **3 . Project 설정을 완료한다.**
 
-<center><img src="\images\roboflow3.PNG" style="zoom:50%;" /></center>
+<center><img src="\images\roboflow3.png" style="zoom:50%;" /></center>
 
  **4 . 다운로드 받아두었던 Dataset을 Roboflow에 업로드한다. (*training* 폴더를 업로드)**
 
 - test 폴더 내에는 annotation 정보가 없으므로 학습에 쓸모가 없다.
 
-<center><img src="\images\roboflow4.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow4.png" style="zoom:80%;" /></center>
 
-<center><img src="\images\roboflow4_1.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow4_1.png" style="zoom:80%;" /></center>
 
-<center><img src="\images\roboflow4_2.PNG" style="zoom:100%;" /></center>
+<center><img src="\images\roboflow4_2.png" style="zoom:100%;" /></center>
 
  **5 . 업로드가 완료되면 Annotation 과정에서의 오류 처리 과정이 등장하며, 큰 문제가 없는지 확인한다.**
 
-<center><img src="\images\roboflow5.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow5.png" style="zoom:80%;" /></center>
 
  **6 . 이후 업로드 된 이미지들의 썸네일을 확인할 수 있으며, 추가적인 Data 추가 등이 가능하다. 우리는 더 추가할 Data가 없으므로 'Finish Uploading'을 눌러 업로드 과정을 마치도록 한다.**
 
-<center><img src="\images\roboflow6.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow6.png" style="zoom:80%;" /></center>
 
  **7 . 이후 단계는 Train/Valid/Test Data의 양을 조정하는 단계로 필요한만큼 설정한다.**
 
-<center><img src="\images\roboflow7.PNG" style="zoom:50%;" /></center>
+<center><img src="\images\roboflow7.png" style="zoom:50%;" /></center>
 
  **8 . Split 설정 완료 후 Format이 변환된 Dataset이 업로드 되며, 잠시 기다린다.**
 
-<center><img src="\images\roboflow8.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow8.png" style="zoom:80%;" /></center>
 
  **9 . 업로드가 완료된 이후 Dataset에 대한 몇 가지 설정을 진행할 수 있다.**
 
-<center><img src="\images\roboflow9.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow9.png" style="zoom:80%;" /></center>
 
 * **Resize**
 
@@ -635,27 +635,27 @@ def convert_boundig_box_coordinate(img_size, box_size):
 
 * **Add Step(Preprocessing)**
 
-  <center><img src="\images\roboflow9_1.PNG" style="zoom:80%;" /></center>
+  <center><img src="\images\roboflow9_1.png" style="zoom:80%;" /></center>
 
   이미지의 특성을 강화하기 위한 전처리 과정으로 흑백처리, 대비 조절 등의 옵션이 있지만, 우리는 사용하지 않는다.
 
  **10 . Augmentation Step은 Bounding Box에 대한 전처리 과정으로 Bounding Box 영역에 해당하는 곳을 흑백 처리하거나, 잘라내거나 하는 등의 변형을 줄 수 있으나 우리는 사용하지 않는다.**
 
-<center><img src="\images\roboflow10.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow10.png" style="zoom:80%;" /></center>
 
-<center><img src="\images\roboflow10_1.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow10_1.png" style="zoom:80%;" /></center>
 
  **11 . Generate Step에서 '*Generate*' 버튼을 눌러 다음 단계로 진행한다.**
 
-<center><img src="\images\roboflow11.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow11.png" style="zoom:80%;" /></center>
 
  **12 . 최종적으로 Dataset의 간략한 정보가 나온다. 'Export'를 눌러 Dataset을 내려받는다.**
 
-<center><img src="\images\roboflow12.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow12.png" style="zoom:80%;" /></center>
 
  **13 . Dataset을 어떤 Format으로 출력할지 선택해준다. 우리는 'YOLO v5 PyTorch'를 선택해준다. 이후 Roboflow API를 이용하여 터미널에서 바로 변환된 Dataset을 받아도 되지만, 클라우드 환경이나 Google Colaboratory 등에서 이점이 많으나, 로컬 환경에서 진행하고 있으므로 ZIP 파일 형태로 다운로드 받는다.**
 
-<center><img src="\images\roboflow13.PNG" style="zoom:80%;" /></center>
+<center><img src="\images\roboflow13.png" style="zoom:80%;" /></center>
 
 * Dataset 폴더는 yolov5 폴더 내에 위치하는 것이 작업에 편리하다.
 
